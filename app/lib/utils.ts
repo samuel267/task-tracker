@@ -13,52 +13,52 @@ const axiosInstance = axios.create({
 });
 
 // Define a custom response type
-interface ApiResponse<T> {
-    data: T;
-    message: string;
-    status: number;
-}
+// interface ApiResponse {
+//     data: TaskResponse[];
+//     message: string;
+//     status: number;
+// }
 
 // Generic Axios utility function for API requests
-export async function axiosPost<T>(url: string, payload: Omit<TaskResponse, 'id'>, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+export async function axiosPost<T>(url: string, payload: Omit<TaskResponse, 'id'>, config?: AxiosRequestConfig) {
     try {
-        const response: AxiosResponse<ApiResponse<T>> = await axiosInstance.post(url, payload, config);
+        const response: AxiosResponse = await axiosInstance.post(url, payload, config);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.message || 'An error occurred during the POST request.');
     }
 }
 
-export async function axiosPut<T>(url: string, payload: T, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+export async function axiosPut<T>(url: string, payload: Omit<TaskResponse, 'id'>, config?: AxiosRequestConfig) {
     try {
-        const response: AxiosResponse<ApiResponse<T>> = await axiosInstance.put(url, payload, config);
+        const response: AxiosResponse = await axiosInstance.put(url, payload, config);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.message || 'An error occurred during the PUT request.');
     }
 }
 
-export async function axiosPatch<T>(url: string, payload: Partial<T>, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+export async function axiosPatch<T>(url: string, payload: Partial<T>, config?: AxiosRequestConfig) {
     try {
-        const response: AxiosResponse<ApiResponse<T>> = await axiosInstance.patch(url, payload, config);
+        const response: AxiosResponse = await axiosInstance.patch(url, payload, config);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.message || 'An error occurred during the PATCH request.');
     }
 }
 
-export async function axiosDelete<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+export async function axiosDelete<T>(url: string, config?: AxiosRequestConfig) {
     try {
-        const response: AxiosResponse<ApiResponse<T>> = await axiosInstance.delete(url, config);
+        const response: AxiosResponse = await axiosInstance.delete(url, config);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.message || 'An error occurred during the DELETE request.');
     }
 }
 
-export async function axiosGet<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+export async function axiosGet<T>(url: string, config?: AxiosRequestConfig) {
     try {
-        const response: AxiosResponse<ApiResponse<T>> = await axiosInstance.get(url, config);
+        const response: AxiosResponse = await axiosInstance.get(url, config);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.message || 'An error occurred during the GET request.');

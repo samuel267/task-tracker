@@ -14,16 +14,15 @@ import {
   fetchTasksSuccess,
 } from "@/app/store/taskSlice";
 
-export default async function TaskTable() {
-  const tasks: TaskResponse[] = useSelector(
-    (state: RootState) => state.tasks?.list || []
-  );
+export default function TaskTable({ tasks }: { tasks: TaskResponse[] }) {
+  //   const tasks: TaskResponse[] = useSelector(
+  //     (state: RootState) => state.tasks?.list || []
+  //   );
   const dispatch = useDispatch();
-
   useEffect(() => {
-    const fetchTasksAndSetState = async () => {
+    const fetchTasksAndSetState = () => {
       try {
-        const tasks: TaskResponse[] = await fetchTasks();
+        // console.log(tasks);
         dispatch(fetchTasksSuccess(tasks));
       } catch (error) {
         if (error instanceof Error) {
@@ -37,15 +36,10 @@ export default async function TaskTable() {
 
     fetchTasksAndSetState();
   }, [dispatch]);
-  //   const tasks: TaskResponse[] = [
-  //     {
-  //       id: "1",
-  //       title: "Task 1",
-  //       description: "Description",
-  //       status: "pending",
-  //       dueDate: "20-07-2024",
-  //     },
-  //   ];
+  //   const tasksStore: TaskResponse[] = useSelector(
+  //     (state: RootState) => state.tasks?.list || []
+  //   );
+  //   console.log(tasksStore);
 
   return (
     <div className="mt-6 flow-root">
@@ -116,7 +110,7 @@ export default async function TaskTable() {
                     <TaskStatus status={task.status} />
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <TaskStatus status={task.dueDate} />
+                    {task.dueDate}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">

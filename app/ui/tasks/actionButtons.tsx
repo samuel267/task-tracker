@@ -17,7 +17,7 @@ export function CreateTask({ innerText = "Add Data" }: { innerText: string }) {
 export function UpdateTask({ id }: { id: string }) {
   return (
     <Link
-      href={`/tasks/new/${id}/edit`}
+      href={`/tasks/create/${id}`}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />

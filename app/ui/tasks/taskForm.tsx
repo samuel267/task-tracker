@@ -11,7 +11,7 @@ import {
 import { Button } from "./button";
 import { useState } from "react";
 import { z } from "zod";
-import { createTask } from "@/app/lib/actions";
+import { createTask, updateTask } from "@/app/lib/actions";
 import { TaskResponse } from "@/app/lib/definitions";
 import { useDispatch, useSelector } from "react-redux";
 // Define the Zod schema
@@ -32,7 +32,13 @@ const taskSchema = z.object({
 
 type StatusOptions = "pending" | "in progress" | "completed";
 
-export default function Form() {
+export default function Form({
+  editTask,
+  taskId,
+}: {
+  editTask: boolean;
+  taskId: string;
+}) {
   const [formData, setFormData] = useState<Omit<TaskResponse, "id">>({
     title: "",
     description: "",
@@ -62,7 +68,11 @@ export default function Form() {
       await taskSchema.parseAsync(formData);
       // If no errors, submit the form
       // Add your submission logic here
-      await createTask(formData);
+      if (editTask) {
+        await updateTask(taskId, formData);
+      } else {
+        await createTask(formData);
+      }
     } catch (err) {
       if (err instanceof z.ZodError) {
         const flattenedErrors = err.flatten().fieldErrors;
@@ -81,8 +91,6 @@ export default function Form() {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* ... rest of your JSX remains the same ... */}
-
       <div className="mb-4">
         <label htmlFor="title" className="mb-2 block text-sm font-medium">
           Task Title

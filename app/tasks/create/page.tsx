@@ -1,7 +1,7 @@
 import Breadcrumbs from "@/app/ui/tasks/breadcrumbs";
 import Form from "@/app/ui/tasks/taskForm";
 
-export default async function Page() {
+export default async function CreateTaskPage() {
   return (
     <main>
       <Breadcrumbs
@@ -14,7 +14,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form />
+      <Form editTask={false} taskId="" />
     </main>
   );
 }

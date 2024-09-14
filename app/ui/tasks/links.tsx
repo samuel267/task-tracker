@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 // Depending on the size of the application, this would be stored in a database.
 const links = [
   { name: "Tasks", href: "/tasks", icon: HomeIcon },
-  { name: "Add Task", href: "/tasks/new", icon: PlusCircleIcon },
+  { name: "Add Task", href: "/tasks/create", icon: PlusCircleIcon },
 ];
 
 export default function NavLinks() {

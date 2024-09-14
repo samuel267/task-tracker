@@ -1,7 +1,7 @@
 // This file contains action that will be used to update Tasks
 import { redirect } from 'next/navigation';
 import { TaskResponse } from './definitions';
-import { axiosPost, axiosPut } from './utils';
+import { axiosDelete, axiosPost, axiosPut } from './utils';
 
 
 
@@ -44,10 +44,9 @@ export async function updateTask(id: string, taskData: Omit<TaskResponse, 'id'>)
 }
 
 export async function deleteTask(id: string) {
-    // throw new Error('Failed to Delete Invoice');
 
-    // Unreachable code block
     try {
+        const data = await axiosDelete(`task/${id}`)
 
         return { message: 'Deleted Task' };
     } catch (error) {

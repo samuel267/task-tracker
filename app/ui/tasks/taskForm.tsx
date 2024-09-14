@@ -244,7 +244,8 @@ export default function Form({
         >
           Cancel
         </Link>
-        <Button type="submit">Add Task</Button>
+        {editTask === true ? <Button type="submit">Edit Task</Button> : null}
+        {editTask === false ? <Button type="submit">Add Task</Button> : null}
       </div>
     </form>
   );

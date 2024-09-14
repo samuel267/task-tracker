@@ -1,5 +1,5 @@
 "use client";
-import SideNav from "../ui/tasks/sidenav";
+import SideNav from "../components/tasks/sidenav";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 

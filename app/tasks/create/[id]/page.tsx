@@ -1,5 +1,5 @@
-import Breadcrumbs from "@/app/ui/tasks/breadcrumbs";
-import Form from "@/app/ui/tasks/taskForm";
+import Breadcrumbs from "@/app/components/tasks/breadcrumbs";
+import Form from "@/app/components/tasks/taskForm";
 
 export default function CreateTaskPage({ params }: { params: { id: string } }) {
   const id = params.id;

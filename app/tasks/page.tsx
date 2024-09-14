@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import TaskTable from "../ui/tasks/table";
-import { CreateTask } from "../ui/tasks/actionButtons";
+import TaskTable from "../components/tasks/table";
+import { CreateTask } from "../components/tasks/actionButtons";
 import { fetchTasks } from "../lib/data";
 import { TaskResponse } from "../lib/definitions";
 

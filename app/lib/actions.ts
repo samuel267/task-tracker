@@ -1,18 +1,11 @@
 // This file contains action that will be used to update Tasks
-import { redirect } from 'next/navigation';
 import { TaskResponse } from './definitions';
-import { axiosDelete, axiosPost, axiosPut } from './utils';
-
-
-
-
-
-
+import { axiosDelete, axiosGet, axiosPost, axiosPut } from './utils';
 
 export async function createTask(taskData: Omit<TaskResponse, 'id'>) {
 
     try {
-        const data = await axiosPost('task', taskData)
+        const data = await axiosPost('tasks', taskData)
         // console.log(data)
         // redirect('/tasks');
 
@@ -27,13 +20,11 @@ export async function createTask(taskData: Omit<TaskResponse, 'id'>) {
 }
 
 
-// ...
-
 export async function updateTask(id: string, taskData: Omit<TaskResponse, 'id'>) {
 
 
     try {
-        const data = await axiosPut(`task/${id}`, taskData)
+        const data = await axiosPut(`tasks/${id}`, taskData)
         return data;
 
     } catch (error) {
@@ -43,12 +34,23 @@ export async function updateTask(id: string, taskData: Omit<TaskResponse, 'id'>)
     // redirect('/tasks');
 }
 
+export async function getTaskById(id: string) {
+
+    try {
+        const data = await axiosGet(`tasks/${id}`)
+
+        return data
+    } catch (error) {
+        return { message: 'Database Error: Failed to Delete Task' };
+    }
+}
+
 export async function deleteTask(id: string) {
 
     try {
-        const data = await axiosDelete(`task/${id}`)
+        const data = await axiosDelete(`tasks/${id}`)
 
-        return { message: 'Deleted Task' };
+        return { message: 'Deleted Task', data };
     } catch (error) {
         return { message: 'Database Error: Failed to Delete Task' };
     }

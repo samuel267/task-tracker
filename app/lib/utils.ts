@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { TaskResponse } from './definitions';
 
-const baseURL: string = 'https://66e415aed2405277ed13009f.mockapi.io/api/'
+const baseURL: string = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000/api/'
 
 
 // Define the base URL for your API
@@ -39,14 +39,7 @@ export async function axiosPut<T>(url: string, payload: Omit<TaskResponse, 'id'>
     }
 }
 
-export async function axiosPatch<T>(url: string, payload: Partial<T>, config?: AxiosRequestConfig) {
-    try {
-        const response: AxiosResponse = await axiosInstance.patch(url, payload, config);
-        return response.data;
-    } catch (error: any) {
-        throw new Error(error.response?.data?.message || 'An error occurred during the PATCH request.');
-    }
-}
+
 
 export async function axiosDelete<T>(url: string, config?: AxiosRequestConfig) {
     try {

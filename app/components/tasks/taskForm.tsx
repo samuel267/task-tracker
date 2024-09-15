@@ -9,11 +9,13 @@ import {
   TagIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "./button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { createTask, updateTask } from "@/app/lib/actions";
 import { TaskResponse } from "@/app/lib/definitions";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { RootState } from "@/app/store/store";
 // Define the Zod schema
 const taskSchema = z.object({
   title: z
@@ -31,7 +33,6 @@ const taskSchema = z.object({
 });
 
 type StatusOptions = "pending" | "in progress" | "completed";
-
 export default function Form({
   editTask,
   taskId,
@@ -46,6 +47,24 @@ export default function Form({
     status: "pending" as StatusOptions,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const router = useRouter();
+  const { list } = useSelector((state: RootState) => state.tasks);
+
+  useEffect(() => {
+    if (editTask && taskId) {
+      console.log("prefill form");
+      const taskToedit: TaskResponse | undefined = list.find(
+        (task) => task.id === taskId
+      );
+      console.log(taskToedit);
+      if (taskToedit) {
+        // Only set form data if a task is found
+        setFormData(taskToedit);
+      } else {
+        console.error(`Task with id ${taskId} not found`);
+      }
+    }
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -61,17 +80,28 @@ export default function Form({
     }
   };
 
-  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await taskSchema.parseAsync(formData);
       // If no errors, submit the form
       // Add your submission logic here
       if (editTask) {
-        await updateTask(taskId, formData);
+        await updateTask(taskId, {
+          title: formData.title,
+          description: formData.description,
+          dueDate: formData.dueDate,
+          status: formData.status,
+        });
+        router.push("/tasks");
+        setLoading(true);
       } else {
         await createTask(formData);
+        router.push("/tasks");
+        setLoading(true);
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -83,6 +113,7 @@ export default function Form({
             formattedErrors[key] = value[0];
           }
         });
+        setLoading(true);
 
         setErrors(formattedErrors);
       }
@@ -155,7 +186,7 @@ export default function Form({
               value={formData.dueDate}
               onChange={handleChange}
               placeholder="Select date"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              className="peer block w-full rounded-md pr-8 border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="dueDate-error"
             />
             <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -173,7 +204,7 @@ export default function Form({
           Set task status
         </legend>
         <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-wrap">
             <div className="flex items-center">
               <input
                 id="pending"
@@ -244,8 +275,13 @@ export default function Form({
         >
           Cancel
         </Link>
-        {editTask === true ? <Button type="submit">Edit Task</Button> : null}
-        {editTask === false ? <Button type="submit">Add Task</Button> : null}
+
+        <Button type="submit">
+          {editTask === true ? "Edit Task" : "Add Task"}
+          {loading === true ? (
+            <ArrowPathIcon className="ml-3 animate-spin h-5 w-5 text-gray-50"></ArrowPathIcon>
+          ) : null}
+        </Button>
       </div>
     </form>
   );

@@ -1,6 +1,17 @@
-import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+"use client";
+
+import {
+  ArrowPathIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { deleteTask } from "@/app/lib/actions";
+import { AppDispatch } from "@/app/store/store";
+import { useDispatch } from "react-redux";
+import { fetchTasks } from "@/app/store/taskSlice";
+import { useState } from "react";
 
 export function CreateTask({ innerText = "Add Data" }: { innerText: string }) {
   return (
@@ -26,16 +37,32 @@ export function UpdateTask({ id }: { id: string }) {
 }
 
 export function DeleteTask({ id }: { id: string }) {
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+
   async function deleteTaskWithId() {
+    setLoading(true);
     const data = await deleteTask(id);
+
+    dispatch(fetchTasks());
+    setLoading(true);
+
     return data;
   }
 
   return (
     <form action={deleteTaskWithId}>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
+      <button
+        disabled={loading}
+        className="rounded-md border p-2 hover:bg-gray-100"
+      >
         <span className="sr-only">Delete</span>
-        <TrashIcon className="w-4" />
+        {loading === false ? (
+          <TrashIcon className="w-4" />
+        ) : (
+          <ArrowPathIcon className="w-4 animate-spin" />
+        )}
       </button>
     </form>
   );

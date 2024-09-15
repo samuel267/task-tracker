@@ -5,48 +5,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { DeleteTask, UpdateTask } from "./actionButtons";
 
 import { TaskResponse } from "@/app/lib/definitions";
-import { RootState } from "@/app/store/store";
+import { AppDispatch, RootState } from "@/app/store/store";
 import { useEffect } from "react";
-import { fetchTasks } from "@/app/lib/data";
-import {
-  fetchTasksFailure,
-  fetchTasksRequest,
-  fetchTasksSuccess,
-} from "@/app/store/taskSlice";
+import { fetchTasks } from "@/app/store/taskSlice";
 
-export default function TaskTable({ tasks }: { tasks: TaskResponse[] }) {
-  //   const tasks: TaskResponse[] = useSelector(
-  //     (state: RootState) => state.tasks?.list || []
-  //   );
-  const dispatch = useDispatch();
+export default function TaskTable() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { list, loading, error } = useSelector(
+    (state: RootState) => state.tasks
+  );
+
   useEffect(() => {
-    const fetchTasksAndSetState = () => {
-      try {
-        // console.log(tasks);
-        dispatch(fetchTasksSuccess(tasks));
-      } catch (error) {
-        if (error instanceof Error) {
-          dispatch(fetchTasksFailure(error.message));
-        } else {
-          console.error("Unexpected error:", error);
-          dispatch(fetchTasksFailure("An unexpected error occurred"));
-        }
-      }
-    };
-
-    fetchTasksAndSetState();
+    dispatch(fetchTasks());
   }, [dispatch]);
-  //   const tasksStore: TaskResponse[] = useSelector(
-  //     (state: RootState) => state.tasks?.list || []
-  //   );
-  //   console.log(tasksStore);
+
+  if (loading) return <p>Loading tasks...</p>;
+  if (error) return <p>Error loading tasks: {error}</p>;
 
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {tasks?.map((task) => (
+            {list?.map((task) => (
               <div
                 key={task.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
@@ -92,7 +74,7 @@ export default function TaskTable({ tasks }: { tasks: TaskResponse[] }) {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {tasks?.map((task) => (
+              {list?.map((task) => (
                 <tr
                   key={task.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

@@ -1,4 +1,3 @@
-import { sql } from '@vercel/postgres';
 import { TaskResponse } from './definitions';
 import { axiosGet } from './utils';
 

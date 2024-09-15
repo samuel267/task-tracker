@@ -6,10 +6,10 @@ export default async function CreateTaskPage() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Invoices", href: "/dashboard/invoices" },
+          { label: "Tasks", href: "#" },
           {
-            label: "Create Invoice",
-            href: "/dashboard/invoices/create",
+            label: "Create Task",
+            href: "#",
             active: true,
           },
         ]}

@@ -23,15 +23,15 @@ const taskSlice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
-        fetchTasksRequest(state) {
+        fetchTasksRequest(state: TasksState) {
             state.loading = true;
             state.error = null;
         },
-        fetchTasksSuccess(state, action: PayloadAction<TaskResponse[]>) {
+        fetchTasksSuccess(state: TasksState, action: PayloadAction<TaskResponse[]>) {
             state.list = action.payload;
             state.loading = false;
         },
-        fetchTasksFailure(state, action: PayloadAction<string>) {
+        fetchTasksFailure(state: TasksState, action: PayloadAction<string>) {
             state.error = action.payload;
             state.loading = false;
         },

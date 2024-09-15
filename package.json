@@ -13,6 +13,7 @@
     "@nextui-org/react": "^2.4.6",
     "@reduxjs/toolkit": "^2.2.7",
     "@vercel/postgres": "^0.10.0",
+    "airtable": "^0.12.2",
     "axios": "^1.7.7",
     "next": "14.2.10",
     "react": "^18",

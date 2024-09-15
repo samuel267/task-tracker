@@ -2,16 +2,23 @@
 import { useRouter } from "next/navigation";
 import { Button } from "./components/tasks/button";
 import {
+  ArrowPathIcon,
   ArrowRightIcon,
   AtSymbolIcon,
   KeyIcon,
 } from "@heroicons/react/24/outline";
+import { useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   function login() {
-    router.push("/tasks");
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      router.push("/tasks");
+    }, 3000);
   }
   return (
     <main className="flex items-center justify-center md:h-screen">
@@ -64,7 +71,13 @@ export default function LoginPage() {
               </div>
             </div>
             <Button className="mt-4 w-full">
-              Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+              Log in{" "}
+              {loading === true ? (
+                <ArrowPathIcon className="ml-auto animate-spin h-5 w-5 text-gray-50" />
+              ) : null}
+              {loading === false ? (
+                <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+              ) : null}
             </Button>
             <div className="flex h-8 items-end space-x-1"></div>
           </div>

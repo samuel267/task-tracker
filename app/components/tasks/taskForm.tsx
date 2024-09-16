@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { createTask, updateTask } from "@/app/lib/actions";
 import { TaskResponse } from "@/app/lib/definitions";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/app/store/store";
 import { Toaster } from "react-hot-toast";
@@ -52,13 +52,14 @@ export default function Form({
   const router = useRouter();
   const { list } = useSelector((state: RootState) => state.tasks);
 
+
   useEffect(() => {
     if (editTask && taskId) {
-      console.log("prefill form");
+      // console.log("prefill form");
       const taskToedit: TaskResponse | undefined = list.find(
         (task) => task.id === taskId
       );
-      console.log(taskToedit);
+      // console.log(taskToedit);
       if (taskToedit) {
         // Only set form data if a task is found
         setFormData(taskToedit);
@@ -66,7 +67,7 @@ export default function Form({
         console.error(`Task with id ${taskId} not found`);
       }
     }
-  }, []);
+  }, [editTask,taskId,list]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -109,7 +110,7 @@ export default function Form({
         });
 
         router.push("/tasks");
-        setLoading(true);
+        setLoading(false);
       } else {
         await createTask(formData);
         showToast({
@@ -121,7 +122,7 @@ export default function Form({
           },
         });
         router.push("/tasks");
-        setLoading(true);
+        setLoading(false);
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -133,16 +134,18 @@ export default function Form({
             formattedErrors[key] = value[0];
           }
         });
-        setLoading(true);
+        setLoading(false);
 
         setErrors(formattedErrors);
       }
+      setLoading(false);
+
     }
   };
 
   return (
     <>
-      {/* <Toaster  /> */}
+      <Toaster  />
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">

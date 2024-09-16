@@ -1,7 +1,8 @@
 import { createTask, getAllTasks } from "@/app/lib/airtable";
 import { TaskResponse } from "@/app/lib/definitions";
 
-export async function GET(request: Request) {
+
+export async function GET() {
 
     try {
         const tasks: TaskResponse[] = await getAllTasks()
@@ -9,15 +10,25 @@ export async function GET(request: Request) {
             headers: { "Content-Type": "application/json" },
             status: 200,
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Failed to fetch task:", error);
+        if (error instanceof Error) {
         return new Response(
             JSON.stringify({ success: false, error: error.message }),
             {
                 headers: { "Content-Type": "application/json" },
                 status: 500,
             }
-        );
+        );}
+        else {
+            return new Response(
+                JSON.stringify({ success: false, error: `Unknown error occurred: ${error}` }),
+                {
+                    headers: { "Content-Type": "application/json" },
+                    status: 500,
+                }
+            );
+        }
     }
 
 
@@ -30,14 +41,28 @@ export async function POST(request: Request) {
             headers: { "Content-Type": "application/json" },
             status: 200,
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error creating data:", error);
-        return new Response(
-            JSON.stringify({ success: false, error: error.message }),
-            {
-                headers: { "Content-Type": "application/json" },
-                status: 500,
-            }
-        );
+        console.error("Error creating data:", error);
+
+        // Safely handle the error type
+        if (error instanceof Error) {
+            return new Response(
+                JSON.stringify({ success: false, error: error.message }),
+                {
+                    headers: { "Content-Type": "application/json" },
+                    status: 500,
+                }
+            );
+        } else {
+            return new Response(
+                JSON.stringify({ success: false, error: `Unknown error occurred: ${error}` }),
+                {
+                    headers: { "Content-Type": "application/json" },
+                    status: 500,
+                }
+            );
+        }
+
     }
 }

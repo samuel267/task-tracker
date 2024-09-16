@@ -4,7 +4,6 @@ import TaskStatus from "./status";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteTask, UpdateTask } from "./actionButtons";
 
-import { TaskResponse } from "@/app/lib/definitions";
 import { AppDispatch, RootState } from "@/app/store/store";
 import { useEffect } from "react";
 import { fetchTasks } from "@/app/store/taskSlice";

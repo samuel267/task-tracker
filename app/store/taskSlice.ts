@@ -35,8 +35,12 @@ export const fetchTasks = createAsyncThunk<TaskResponse[], void, { rejectValue: 
 
 
             return tasks; // Returning the task list from the API response
-        } catch (error: any) {
-            return rejectWithValue(error.message);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message); // Return the error message if it's an Error
+            } else {
+                return rejectWithValue('An unknown error occurred');
+            }
         }
     }
 );
@@ -61,7 +65,7 @@ const taskSlice = createSlice({
         });
 
         // Handle failure if there's an error during the fetch
-        builder.addCase(fetchTasks.rejected, (state: TasksState, action: PayloadAction<any>) => {
+        builder.addCase(fetchTasks.rejected, (state: TasksState, action: PayloadAction<string | undefined>) => {
             state.error = action.payload || 'Unknown error';
             state.loading = false;
         });

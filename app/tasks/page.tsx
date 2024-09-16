@@ -1,6 +1,5 @@
 import TaskTable from "../components/tasks/table";
 import { CreateTask } from "../components/tasks/actionButtons";
-import { TaskResponse } from "../lib/definitions";
 
 export default async function Page() {
   return (

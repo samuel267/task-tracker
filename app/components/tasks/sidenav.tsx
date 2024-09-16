@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { PowerIcon } from "@heroicons/react/24/outline";
 import NavLinks from "./links";
 
 export default function SideNav() {

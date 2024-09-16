@@ -23,15 +23,25 @@ export async function GET(request: Request, { params }: { params: { id: string }
             });
         }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Failed to fetch task:", error);
-        return new Response(
-            JSON.stringify({ success: false, error: error.message }),
-            {
-                headers: { "Content-Type": "application/json" },
-                status: 500,
+        if (error instanceof Error) {
+            return new Response(
+                JSON.stringify({ success: false, error: error.message }),
+                {
+                    headers: { "Content-Type": "application/json" },
+                    status: 500,
+                }
+            );}
+            else {
+                return new Response(
+                    JSON.stringify({ success: false, error: `Unknown error occurred: ${error}` }),
+                    {
+                        headers: { "Content-Type": "application/json" },
+                        status: 500,
+                    }
+                );
             }
-        );
     }
 }
 
@@ -48,15 +58,26 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             headers: { "Content-Type": "application/json" },
             status: 200,
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error updating task:", error);
-        return new Response(
-            JSON.stringify({ success: false, error: error.message }),
-            {
-                headers: { "Content-Type": "application/json" },
-                status: 500,
+
+        if (error instanceof Error) {
+            return new Response(
+                JSON.stringify({ success: false, error: error.message }),
+                {
+                    headers: { "Content-Type": "application/json" },
+                    status: 500,
+                }
+            );}
+            else {
+                return new Response(
+                    JSON.stringify({ success: false, error: `Unknown error occurred: ${error}` }),
+                    {
+                        headers: { "Content-Type": "application/json" },
+                        status: 500,
+                    }
+                );
             }
-        );
     }
 }
 
@@ -69,14 +90,26 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
             headers: { "Content-Type": "application/json" },
             status: 200,
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
+
         console.error("Error deleting task:", error);
-        return new Response(
-            JSON.stringify({ success: false, error: error.message }),
-            {
-                headers: { "Content-Type": "application/json" },
-                status: 500,
+
+        if (error instanceof Error) {
+            return new Response(
+                JSON.stringify({ success: false, error: error.message }),
+                {
+                    headers: { "Content-Type": "application/json" },
+                    status: 500,
+                }
+            );}
+            else {
+                return new Response(
+                    JSON.stringify({ success: false, error: `Unknown error occurred: ${error}` }),
+                    {
+                        headers: { "Content-Type": "application/json" },
+                        status: 500,
+                    }
+                );
             }
-        );
     }
 }

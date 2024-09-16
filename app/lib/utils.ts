@@ -13,48 +13,54 @@ const axiosInstance = axios.create({
     },
 });
 
-// Define a custom response type
-// interface ApiResponse {
-//     data: TaskResponse[];
-//     message: string;
-//     status: number;
-// }
-
 // Generic Axios utility function for API requests
-export async function axiosPost<T>(url: string, payload: Omit<TaskResponse, 'id'>, config?: AxiosRequestConfig) {
+export async function axiosPost(url: string, payload: Omit<TaskResponse, 'id'>, config?: AxiosRequestConfig) {
     try {
         const response: AxiosResponse = await axiosInstance.post(url, payload, config);
         return response.data;
-    } catch (error: any) {
-        throw new Error(error.response?.data?.message || 'An error occurred during the POST request.');
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error(error.message || 'An error occurred during the POST request.');
+        }
+
     }
 }
 
-export async function axiosPut<T>(url: string, payload: Omit<TaskResponse, 'id'>, config?: AxiosRequestConfig) {
+export async function axiosPut(url: string, payload: Omit<TaskResponse, 'id'>, config?: AxiosRequestConfig) {
     try {
         const response: AxiosResponse = await axiosInstance.put(url, payload, config);
         return response.data;
-    } catch (error: any) {
-        throw new Error(error.response?.data?.message || 'An error occurred during the PUT request.');
+    } catch (error: unknown) {
+
+        if (error instanceof Error) {
+            throw new Error(error.message || 'An error occurred during the PUT request.');
+        }
     }
 }
 
 
 
-export async function axiosDelete<T>(url: string, config?: AxiosRequestConfig) {
+export async function axiosDelete(url: string, config?: AxiosRequestConfig) {
     try {
         const response: AxiosResponse = await axiosInstance.delete(url, config);
         return response.data;
-    } catch (error: any) {
-        throw new Error(error.response?.data?.message || 'An error occurred during the DELETE request.');
+    } catch (error: unknown) {
+
+        if (error instanceof Error) {
+            throw new Error(error.message || 'An error occurred during the DELETE request.');
+        }
     }
 }
 
-export async function axiosGet<T>(url: string, config?: AxiosRequestConfig) {
+export async function axiosGet(url: string, config?: AxiosRequestConfig) {
     try {
         const response: AxiosResponse = await axiosInstance.get(url, config);
         return response.data;
-    } catch (error: any) {
-        throw new Error(error.response?.data?.message || 'An error occurred during the GET request.');
+    } catch (error: unknown) {
+
+        if (error instanceof Error) {
+            throw new Error(error.message || 'An error occurred during the GET request.');
+        }
+
     }
 }

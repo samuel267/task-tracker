@@ -12,6 +12,8 @@ import { AppDispatch } from "@/app/store/store";
 import { useDispatch } from "react-redux";
 import { fetchTasks } from "@/app/store/taskSlice";
 import { useState } from "react";
+import { showToast } from "../utils/hotToast";
+import { Toaster } from "react-hot-toast";
 
 export function CreateTask({ innerText = "Add Data" }: { innerText: string }) {
   return (
@@ -43,27 +45,42 @@ export function DeleteTask({ id }: { id: string }) {
 
   async function deleteTaskWithId() {
     setLoading(true);
-    const data = await deleteTask(id);
+    let data;
 
-    dispatch(fetchTasks());
-    setLoading(true);
+    setTimeout(async () => {
+      data = await deleteTask(id);
+      showToast({
+        type: "info",
+        message: "Task has been deleted",
+        options: {
+          duration: 4000,
+          position: "top-center",
+        },
+      });
+      setLoading(false);
+      dispatch(fetchTasks());
+    }, 2000);
 
     return data;
   }
 
   return (
-    <form action={deleteTaskWithId}>
-      <button
-        disabled={loading}
-        className="rounded-md border p-2 hover:bg-gray-100"
-      >
-        <span className="sr-only">Delete</span>
-        {loading === false ? (
-          <TrashIcon className="w-4" />
-        ) : (
-          <ArrowPathIcon className="w-4 animate-spin" />
-        )}
-      </button>
-    </form>
+    <>
+      <Toaster />
+      <form action={deleteTaskWithId}>
+        <button
+          data-testid="delete-task"
+          disabled={loading}
+          className="rounded-md border p-2 hover:bg-gray-100"
+        >
+          <span className="sr-only">Delete</span>
+          {loading === false ? (
+            <TrashIcon className="w-4" />
+          ) : (
+            <ArrowPathIcon className="w-4 animate-spin" />
+          )}
+        </button>
+      </form>
+    </>
   );
 }

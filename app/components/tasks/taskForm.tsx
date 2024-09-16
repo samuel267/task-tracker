@@ -16,6 +16,8 @@ import { TaskResponse } from "@/app/lib/definitions";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/app/store/store";
+import { Toaster } from "react-hot-toast";
+import { showToast } from "../utils/hotToast";
 // Define the Zod schema
 const taskSchema = z.object({
   title: z
@@ -96,10 +98,28 @@ export default function Form({
           dueDate: formData.dueDate,
           status: formData.status,
         });
+
+        showToast({
+          type: "success",
+          message: "Task has been updated",
+          options: {
+            duration: 4000,
+            position: "top-center",
+          },
+        });
+
         router.push("/tasks");
         setLoading(true);
       } else {
         await createTask(formData);
+        showToast({
+          type: "success",
+          message: "Task has been added",
+          options: {
+            duration: 4000,
+            position: "top-center",
+          },
+        });
         router.push("/tasks");
         setLoading(true);
       }
@@ -121,168 +141,175 @@ export default function Form({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="mb-4">
-        <label htmlFor="title" className="mb-2 block text-sm font-medium">
-          Task Title
-        </label>
-        <div className="relative mt-2 rounded-md">
-          <div className="relative">
-            <input
-              id="title"
-              name="title"
-              type="text"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Enter the task title"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="title-error"
-            />
-            <HashtagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-          </div>
-        </div>
-        <div id="title-error" aria-live="polite" aria-atomic="true">
-          {errors.title && (
-            <p className="mt-2 text-sm text-red-500">{errors.title}</p>
-          )}
-        </div>
-      </div>
+    <>
+      {/* <Toaster  /> */}
 
-      <div className="mb-4">
-        <label htmlFor="description" className="mb-2 block text-sm font-medium">
-          Task Description
-        </label>
-        <div className="relative mt-2 rounded-md">
-          <div className="relative">
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Enter the description"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="description-error"
-            />
-            <TagIcon className="pointer-events-none absolute left-3 top-1/3 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-          </div>
-        </div>
-        <div id="description-error" aria-live="polite" aria-atomic="true">
-          {errors.description && (
-            <p className="mt-2 text-sm text-red-500">{errors.description}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="dueDate" className="mb-2 block text-sm font-medium">
-          Set due date
-        </label>
-        <div className="relative mt-2 rounded-md">
-          <div className="relative">
-            <input
-              id="dueDate"
-              name="dueDate"
-              type="date"
-              value={formData.dueDate}
-              onChange={handleChange}
-              placeholder="Select date"
-              className="peer block w-full rounded-md pr-8 border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="dueDate-error"
-            />
-            <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-          </div>
-        </div>
-        <div id="dueDate-error" aria-live="polite" aria-atomic="true">
-          {errors.dueDate && (
-            <p className="mt-2 text-sm text-red-500">{errors.dueDate}</p>
-          )}
-        </div>
-      </div>
-
-      <fieldset>
-        <legend className="mb-2 block text-sm font-medium">
-          Set task status
-        </legend>
-        <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-          <div className="flex gap-4 flex-wrap">
-            <div className="flex items-center">
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="title" className="mb-2 block text-sm font-medium">
+            Task Title
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
               <input
-                id="pending"
-                name="status"
-                type="radio"
-                value="pending"
-                checked={formData.status === "pending"}
+                id="title"
+                name="title"
+                type="text"
+                value={formData.title}
                 onChange={handleChange}
-                className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                aria-describedby="status-error"
+                placeholder="Enter the task title"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="title-error"
               />
-              <label
-                htmlFor="pending"
-                className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
-              >
-                Pending <ClockIcon className="h-4 w-4" />
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                id="in-progress"
-                name="status"
-                type="radio"
-                value="in progress"
-                checked={formData.status === "in progress"}
-                onChange={handleChange}
-                className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                aria-describedby="status-error"
-              />
-              <label
-                htmlFor="in-progress"
-                className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-yellow-500 px-3 py-1.5 text-xs font-medium text-white"
-              >
-                In Progress <ArrowPathIcon className="h-4 w-4" />
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                id="completed"
-                name="status"
-                type="radio"
-                value="completed"
-                checked={formData.status === "completed"}
-                onChange={handleChange}
-                className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                aria-describedby="status-error"
-              />
-              <label
-                htmlFor="completed"
-                className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
-              >
-                Completed <CheckIcon className="h-4 w-4" />
-              </label>
+              <HashtagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+          <div id="title-error" aria-live="polite" aria-atomic="true">
+            {errors.title && (
+              <p className="mt-2 text-sm text-red-500">{errors.title}</p>
+            )}
+          </div>
         </div>
-        <div id="status-error" aria-live="polite" aria-atomic="true">
-          {errors.status && (
-            <p className="mt-2 text-sm text-red-500">{errors.status}</p>
-          )}
+
+        <div className="mb-4">
+          <label
+            htmlFor="description"
+            className="mb-2 block text-sm font-medium"
+          >
+            Task Description
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Enter the description"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="description-error"
+              />
+              <TagIcon className="pointer-events-none absolute left-3 top-1/3 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+          <div id="description-error" aria-live="polite" aria-atomic="true">
+            {errors.description && (
+              <p className="mt-2 text-sm text-red-500">{errors.description}</p>
+            )}
+          </div>
         </div>
-      </fieldset>
 
-      <div className="mt-6 flex justify-end gap-4">
-        <Link
-          href="/tasks"
-          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-        >
-          Cancel
-        </Link>
+        <div className="mb-4">
+          <label htmlFor="dueDate" className="mb-2 block text-sm font-medium">
+            Set due date
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="dueDate"
+                name="dueDate"
+                type="date"
+                value={formData.dueDate}
+                onChange={handleChange}
+                placeholder="Select date"
+                className="peer block w-full rounded-md pr-8 border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="dueDate-error"
+              />
+              <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+          <div id="dueDate-error" aria-live="polite" aria-atomic="true">
+            {errors.dueDate && (
+              <p className="mt-2 text-sm text-red-500">{errors.dueDate}</p>
+            )}
+          </div>
+        </div>
 
-        <Button type="submit">
-          {editTask === true ? "Edit Task" : "Add Task"}
-          {loading === true ? (
-            <ArrowPathIcon className="ml-3 animate-spin h-5 w-5 text-gray-50"></ArrowPathIcon>
-          ) : null}
-        </Button>
-      </div>
-    </form>
+        <fieldset>
+          <legend className="mb-2 block text-sm font-medium">
+            Set task status
+          </legend>
+          <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
+            <div className="flex gap-4 flex-wrap">
+              <div className="flex items-center">
+                <input
+                  id="pending"
+                  name="status"
+                  type="radio"
+                  value="pending"
+                  checked={formData.status === "pending"}
+                  onChange={handleChange}
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  aria-describedby="status-error"
+                />
+                <label
+                  htmlFor="pending"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
+                >
+                  Pending <ClockIcon className="h-4 w-4" />
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="in-progress"
+                  name="status"
+                  type="radio"
+                  value="in progress"
+                  checked={formData.status === "in progress"}
+                  onChange={handleChange}
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  aria-describedby="status-error"
+                />
+                <label
+                  htmlFor="in-progress"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-yellow-500 px-3 py-1.5 text-xs font-medium text-white"
+                >
+                  In Progress <ArrowPathIcon className="h-4 w-4" />
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="completed"
+                  name="status"
+                  type="radio"
+                  value="completed"
+                  checked={formData.status === "completed"}
+                  onChange={handleChange}
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  aria-describedby="status-error"
+                />
+                <label
+                  htmlFor="completed"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
+                >
+                  Completed <CheckIcon className="h-4 w-4" />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div id="status-error" aria-live="polite" aria-atomic="true">
+            {errors.status && (
+              <p className="mt-2 text-sm text-red-500">{errors.status}</p>
+            )}
+          </div>
+        </fieldset>
+
+        <div className="mt-6 flex justify-end gap-4">
+          <Link
+            href="/tasks"
+            className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+          >
+            Cancel
+          </Link>
+
+          <Button type="submit">
+            {editTask === true ? "Edit Task" : "Add Task"}
+            {loading === true ? (
+              <ArrowPathIcon className="ml-3 animate-spin h-5 w-5 text-gray-50"></ArrowPathIcon>
+            ) : null}
+          </Button>
+        </div>
+      </form>
+    </>
   );
 }

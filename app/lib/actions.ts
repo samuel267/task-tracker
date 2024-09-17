@@ -1,3 +1,5 @@
+'use server'
+
 // This file contains action that will be used to update Tasks
 import { TaskResponse } from './definitions';
 import { axiosDelete, axiosGet, axiosPost, axiosPut } from './utils';

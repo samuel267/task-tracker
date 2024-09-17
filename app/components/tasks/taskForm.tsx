@@ -79,7 +79,7 @@ export default function Form({
         dueDate: new Date(value).toISOString().split("T")[0],
       }));
     } else {
-      setFormData((prevData) => ({ ...prevData, [name]: value.toLowerCase() }));
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
 
